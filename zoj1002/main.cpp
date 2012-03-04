@@ -47,8 +47,8 @@ int main()
 {
     int i,k;
 
-    freopen("..\\zoj1002\\data.txt","r",stdin);
-    freopen("..\\zoj1002\\result.txt","w",stdout);
+    //freopen("..\\zoj1002\\data.txt","r",stdin);
+    //freopen("..\\zoj1002\\result.txt","w",stdout);
 
     while( ~scanf("%d",&n) && n )
     {
@@ -96,7 +96,7 @@ int main()
                 if( chmap[i][k] == '.' )
                     g[map[i][k]][rmap[i][k]] = 1;
         int ans = Hungary();
-        printf("%d\n",ans);
+        printf("%d/n",ans);
     }
     return 0;
 }
