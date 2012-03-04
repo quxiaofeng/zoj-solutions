@@ -2,7 +2,6 @@
 #include <stack>
 #include <math.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #include <limits.h>
 #include <string.h>
@@ -46,9 +45,11 @@ int Hungary()
 }
 int main()
 {
-    freopen("..\\zoj1002\\data.txt","r",stdin);
-    //freopen("..\\zoj1002\\result.txt","w",stdout);
     int i,k;
+
+    freopen("..\\zoj1002\\data.txt","r",stdin);
+    freopen("..\\zoj1002\\result.txt","w",stdout);
+
     while( ~scanf("%d",&n) && n )
     {
         memset(map,0,sizeof(map));
