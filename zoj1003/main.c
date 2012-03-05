@@ -1,11 +1,13 @@
 #include <stdio.h>
 
-int main(void)
+int main()
 {
-    freopen("..\\zoj1003\\data.txt","r",stdin);
-    freopen("..\\zoj1003\\result.txt","w",stdout);
+    int a,b;
 
-    printf("Hello World!\n");
+    freopen("..\\zoj1001\\data.txt","r",stdin);
+    freopen("..\\zoj1001\\result.txt","w",stdout);
+
+    while(scanf("%d %d",&a, &b) != EOF)
+        printf("%d\n",a+b);
     return 0;
 }
-

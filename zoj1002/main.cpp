@@ -1,102 +1,106 @@
-#include <queue>
-#include <stack>
-#include <math.h>
+/**********************************************
+Written by  : quxiaofeng.at.polyu@gmail.com
+Date        : 2012-03-05 11:36:38
+Description : No best map result TAT
+State       : Accepted
+Run Time    : 0ms
+Run Memory  : 180KB
+***********************************************/
+
 #include <stdio.h>
-#include <iostream>
-#include <limits.h>
+#include <malloc.h>
 #include <string.h>
-#include <algorithm>
-#define MAX 5
-#define MMAX 30
-using namespace std;
-char chmap[MAX][MAX];
-int map[MAX][MAX];
-int rmap[MAX][MAX];
-bool g[MMAX][MMAX];
-int used[MMAX],mat[MMAX];
-int n,m;
-int nn,mm;
-int Augement(int x)
-{
-    int i;
-    for(i=1; i<=mm; i++)
-        if( !used[i] && g[x][i] )
-        {
-            used[i] = 1;
-            if( mat[i] == 0 || Augement(mat[i]) )
-            {
-                mat[i] = x;
-                return 1;
-            }
+
+void fill_map(int side_length, char * search_map, int ipos) {
+    int irow = ipos / side_length;
+    int icol = ipos % side_length;
+    //file the forthcoming cols of the same row
+    for (; icol < side_length; icol ++){
+        if (search_map[irow * side_length + icol] == 'X') {
+            break;
         }
-    return 0;
-}
-int Hungary()
-{
-    int i,sum = 0;
-    memset(mat,0,sizeof(mat));
-    for(i=1; i<=nn; i++)
-    {
-        memset(used,0,sizeof(used));
-        if( Augement(i) )
-            sum++;
+        else {
+            search_map[irow * side_length + icol] = '8';
+        }
     }
-    return sum;
+    //file the forthcoming rows of the same col
+    icol = ipos % side_length;
+    for (; irow < side_length; irow ++){
+        if (search_map[irow * side_length + icol] == 'X') {
+            break;
+        }
+        else {
+            search_map[irow * side_length + icol] = '8';
+        }
+    }
 }
-int main()
+
+int try_castles(int side_length, char * city_map, int ipos) {
+    int max_castles = 0;
+    int cnt_castles = 0;
+    char * search_map = (char *)malloc(side_length * side_length);
+    memcpy (search_map, city_map, side_length * side_length);
+
+    for(;ipos < side_length * side_length - 1; ++ipos) {
+        if ('.' == search_map[ipos]){
+            //find the blank and position a castle
+            search_map[ipos] = 'O';
+            fill_map(side_length, search_map, ipos);
+            cnt_castles = try_castles(side_length, search_map, ipos + 1);
+            cnt_castles += 1;
+            max_castles = max_castles > cnt_castles ? max_castles : cnt_castles;
+
+            //find the blank but do not position a castle
+            cnt_castles = try_castles(side_length, city_map, ipos + 1);
+            max_castles = max_castles > cnt_castles ? max_castles : cnt_castles;
+        }
+    }
+    //last point
+    if (ipos == side_length * side_length - 1 ) {
+        if ('.' == search_map[ipos])
+            max_castles = max_castles > 1 ? max_castles : 1;
+    }
+    free(search_map);
+    return max_castles;
+}
+
+int main(void)
 {
-    int i,k;
+    int side_length = 0;
+    char * city_map;
+    int max_castles = 0;
+    int irow = 0, icol = 0;
+    int origin_pos = 0;
 
     //freopen("..\\zoj1002\\data.txt","r",stdin);
     //freopen("..\\zoj1002\\result.txt","w",stdout);
 
-    while( ~scanf("%d",&n) && n )
-    {
-        memset(map,0,sizeof(map));
-        memset(rmap,0,sizeof(map));
-        memset(g,0,sizeof(g));
-        for(i=0; i<n; i++)
-            scanf("%s",chmap[i]);
-        nn = mm = 0;
-        for(i=0; i<n; i++)
-        {
-            k = 0;
-            while( k < n )
-                if( chmap[i][k] == '.' )
-                {
-                    nn++;
-                    while( k < n && chmap[i][k] != 'X' )
-                    {
-                        map[i][k] = nn;
-                        k++;
-                    }
-                }
-                else
-                    k++;
+    //read data
+    while ( scanf("%d", &side_length) && side_length ) {
+        if ('\n' == getchar()) {
+            ;
+        }
+        else {
+            return -1;
         }
 
-        for(i=0; i<n; i++)
-        {
-            k = 0;
-            while( k < n )
-                if( chmap[k][i] == '.' )
-                {
-                    mm++;
-                    while( k < n && chmap[k][i] != 'X' )
-                    {
-                        rmap[k][i] = mm;
-                        k++;
-                    }
-                }
-                else
-                    k++;
+        city_map = (char *)malloc(side_length*side_length);
+
+        for (irow = 0; irow < side_length; ++ irow) {
+            for ( icol = 0; icol <side_length; ++ icol) {
+                scanf("%c",&city_map[irow * side_length + icol]);
+            }
+            if ('\n' == getchar()) {
+                ;
+            }
+            else {
+                return -1;
+            }
         }
-        for(i=0; i<n; i++)
-            for(k=0; k<n; k++)
-                if( chmap[i][k] == '.' )
-                    g[map[i][k]][rmap[i][k]] = 1;
-        int ans = Hungary();
-        printf("%d/n",ans);
+
+        //try to solve
+        max_castles = try_castles(side_length, city_map, origin_pos);
+        printf("%d\n", max_castles);
     }
     return 0;
 }
