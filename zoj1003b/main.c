@@ -1,9 +1,9 @@
 /**********************************************
 Written by  : quxiaofeng.at.polyu@gmail.com
-Date        : 2012-03-06 02:29:36
+Date        : 2012-03-06 16:25:47
 Description : dfs with a complicated situation
 State       : Accepted
-Run Time    : 270ms
+Run Time    : 20ms
 Run Memory  : 180KB
 ***********************************************/
 #include <stdio.h>
